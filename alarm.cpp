@@ -65,11 +65,12 @@ auto string_from_secs ( const long long endTime ) -> string {
 class Timer
 {
 public:
-    Timer ( const CString &sLine, unsigned int id )
+    Timer ( const CString &sLine, unsigned int id ) 
     {
         start_time_ = time ( 0 );
         end_time_ = parser::secs_from_string(sLine) + start_time_;
-        reason_ = sLine.substr ( 4, sLine.size ( ) - 1 );
+		const unsigned int reason_length = sLine.size() > REASON_LENGTH_MAX ? REASON_LENGTH_MAX : sLine.size() -1; // make sure to only use up to 512 characters for the reason which should be plenty
+        reason_ = sLine.substr ( 4, reason_length  );
         this->timer_id_ = id;
     }
     auto get_start_time  ( ) const
@@ -97,6 +98,7 @@ public:
         return parser::string_from_secs(end_time_);
     }
 private:
+	const unsigned int REASON_LENGTH_MAX{512};
     long long int start_time_ = 0LL;
     long long int end_time_ = 0LL;
     unsigned int timer_id_ = 0u;
