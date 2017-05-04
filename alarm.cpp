@@ -69,7 +69,7 @@ public:
     {
         start_time_ = time ( 0 );
         end_time_ = parser::secs_from_string(sLine) + start_time_;
-		const unsigned int reason_length = sLine.size() > REASON_LENGTH_MAX ? REASON_LENGTH_MAX : sLine.size() -1; // make sure to only use up to 512 characters for the reason which should be plenty
+        const unsigned int reason_length = sLine.size() > REASON_LENGTH_MAX ? REASON_LENGTH_MAX : sLine.size() -1; // make sure to only use up to 512 characters for the reason which should be plenty
         reason_ = sLine.substr ( 4, reason_length  );
         this->timer_id_ = id;
     }
