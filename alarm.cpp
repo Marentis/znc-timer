@@ -98,7 +98,7 @@ public:
         return parser::string_from_secs(end_time_);
     }
 private:
-	const unsigned REASON_LENGTH_MAX{512u};
+    const unsigned REASON_LENGTH_MAX{512u};
     long long start_time_ = 0LL;
     long long end_time_ = 0LL;
     unsigned timer_id_ = 0u;
