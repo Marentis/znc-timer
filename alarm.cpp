@@ -1,9 +1,9 @@
 /*
 * A simple alarm/timer module for ZNC.
-* Version 0.4.1-beta
-* Copyright (c) 2016, Alexander Schwarz
-* Contact: alexander1.schwarz@st.oth-regensburg.de
-* License: FreeBSD License
+* Version 0.4.2-beta
+* Copyright (c) 2017, Alexander Schwarz
+* Contact: webmaster@dragongamer.net
+* License: BSD 3-clause License
 */
 
 #include <iostream>
@@ -39,10 +39,10 @@ auto secs_from_string ( const CString &sLine ) -> long long {
 }
 auto string_from_secs ( const long long end_time ) -> string {
     auto rest = end_time - time(0);
-    auto hours = rest / 3600;
-    rest -= hours * 3600;
+	auto hours = rest / 3600;
+    rest = rest % 3600;
     auto minutes = rest / 60;
-    rest -= minutes * 60;
+    rest = rest % 60;
     auto seconds = rest;
     std::string minutes_string, seconds_string;
     if (minutes < 10)
