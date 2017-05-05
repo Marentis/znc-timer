@@ -39,7 +39,7 @@ auto secs_from_string ( const CString &sLine ) -> long long {
 }
 auto string_from_secs ( const long long end_time ) -> string {
     auto rest = end_time - time(0);
-	auto hours = rest / 3600;
+    auto hours = rest / 3600;
     rest = rest % 3600;
     auto minutes = rest / 60;
     rest = rest % 60;
@@ -73,11 +73,11 @@ public:
         reason_ = sLine.substr ( 4, reason_length  );
         this->timer_id_ = id;
     }
-    auto get_start_time  ( ) const
+    auto get_start_time  ( ) const -> long long
     {
         return start_time_;
     }
-    auto get_end_time ( ) const
+    auto get_end_time ( ) const -> long long
     {
         return end_time_;
     }
@@ -85,11 +85,11 @@ public:
     {
         return time ( 0 ) >= end_time_;
     }
-    auto get_timer ( ) const
+    auto get_timer ( ) const -> string
     {
         return reason_;
     }
-    auto get_id ( ) const
+    auto get_id ( ) const -> unsigned
     {
         return timer_id_;
     }
@@ -99,9 +99,9 @@ public:
     }
 private:
 	const unsigned REASON_LENGTH_MAX{512u};
-    long long int start_time_ = 0LL;
-    long long int end_time_ = 0LL;
-    unsigned int timer_id_ = 0u;
+    long long start_time_ = 0LL;
+    long long end_time_ = 0LL;
+    unsigned timer_id_ = 0u;
     string reason_ = "Default"s;
 };
 
