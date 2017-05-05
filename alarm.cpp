@@ -15,7 +15,7 @@
 #include <condition_variable>
 #include <iterator>
 #include <list>
-#include "znc/IRCNetwork.h"
+#include "znc/main.h"
 #include "znc/Modules.h"
 
 using namespace std;
@@ -199,4 +199,4 @@ private:
     bool check_loop_{true};
     thread t1_;
 };
-MODULEDEFS( CAlarm, "A simple alarm clock" )
+GLOBALMODULEDEFS( CAlarm, "A simple alarm clock" )
