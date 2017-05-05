@@ -37,27 +37,27 @@ auto secs_from_string ( const CString &sLine ) -> long long {
 
     return seconds;
 }
-auto string_from_secs ( const long long endTime ) -> string {
-    auto rest = endTime - time(0);
+auto string_from_secs ( const long long end_time ) -> string {
+    auto rest = end_time - time(0);
     auto hours = rest / 3600;
     rest -= hours * 3600;
     auto minutes = rest / 60;
     rest -= minutes * 60;
     auto seconds = rest;
-    std::string minutesString, secondsString;
+    std::string minutes_string, seconds_string;
     if (minutes < 10)
     {
-        minutesString = "0" + to_string(minutes);
+        minutes_string = "0" + to_string(minutes);
     } else {
-        minutesString = to_string(minutes);
+        minutes_string = to_string(minutes);
     }
     if (seconds < 10)
     {
-        secondsString = "0" + to_string(seconds);
+        seconds_string = "0" + to_string(seconds);
     } else {
-        secondsString = to_string(seconds);
+        seconds_string = to_string(seconds);
     }
-    auto temp = string{to_string(hours) + ":" + minutesString + ":" + secondsString};
+    auto temp = string{to_string(hours) + ":" + minutes_string + ":" + seconds_string};
     return temp;
 }
 } // end of namespace parser
@@ -69,7 +69,7 @@ public:
     {
         start_time_ = time ( 0 );
         end_time_ = parser::secs_from_string(sLine) + start_time_;
-        const unsigned int reason_length = sLine.size() > REASON_LENGTH_MAX ? REASON_LENGTH_MAX : sLine.size() -1; // make sure to only use up to 512 characters for the reason which should be plenty
+        const unsigned int reason_length = sLine.size() > REASON_LENGTH_MAX ? REASON_LENGTH_MAX : sLine.size() -1;
         reason_ = sLine.substr ( 4, reason_length  );
         this->timer_id_ = id;
     }
@@ -98,7 +98,7 @@ public:
         return parser::string_from_secs(end_time_);
     }
 private:
-	const unsigned int REASON_LENGTH_MAX{512};
+	const unsigned REASON_LENGTH_MAX{512u};
     long long int start_time_ = 0LL;
     long long int end_time_ = 0LL;
     unsigned int timer_id_ = 0u;
@@ -199,4 +199,4 @@ private:
     bool check_loop_{true};
     thread t1_;
 };
-MODULEDEFS( CAlarm, "A simple alarm clock" );
+MODULEDEFS( CAlarm, "A simple alarm clock" )
