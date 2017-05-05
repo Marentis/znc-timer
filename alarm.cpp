@@ -98,7 +98,7 @@ public:
         return parser::string_from_secs(end_time_);
     }
 private:
-    const unsigned REASON_LENGTH_MAX{512u};
+    const unsigned REASON_LENGTH_MAX{128u};
     long long start_time_ = 0LL;
     long long end_time_ = 0LL;
     unsigned timer_id_ = 0u;
@@ -124,7 +124,6 @@ public:
     virtual ~CAlarm ( ) override
     {
         check_loop_ = false;
-        cv_.notify_all();
         t1_.join ( );
     }
     virtual bool OnLoad ( const CString &sArgs, CString &sMessage ) override
@@ -141,7 +140,6 @@ public:
         timer_list_.emplace_back ( sLine, ++timer_id_ );
         sort_timers();
         PutModule("Timer added.");
-        cv_.notify_all();
     }
     void sort_timers ()
     {
@@ -178,10 +176,9 @@ public:
     void loopFunc ()
     {
         while ( check_loop_ ) {
+            std::this_thread::sleep_for(std::chrono::seconds(1));
             std::unique_lock<std::mutex> lock(mutex_);
-            if ( timer_list_.empty() ) cv_.wait(lock);
-            else {
-                cv_.wait_for(lock, std::chrono::seconds( timer_list_.front().get_end_time()-std::time(0) ) );
+            if ( !timer_list_.empty() ) {
                 if ( timer_list_.front().timer_ran_out (  ) ) {
                     PutModule ( "Timer expired: " + timer_list_.front().get_timer ( ) );
                     timer_list_.pop_front();
@@ -194,9 +191,8 @@ private:
     const unsigned int timer_limit_ = 16u;
     unsigned int timer_id_ = 0u;
     std::list<Timer> timer_list_;
-    std::condition_variable cv_;
     mutex mutex_{};
     bool check_loop_{true};
     thread t1_;
 };
-GLOBALMODULEDEFS( CAlarm, "A simple alarm clock" )
+USERMODULEDEFS( CAlarm, "A simple alarm clock" )
