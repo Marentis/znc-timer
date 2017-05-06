@@ -1,6 +1,6 @@
 /*
 * A simple alarm/timer module for ZNC.
-* Version 0.4.2-beta
+* Version 0.4.3-beta
 * Copyright (c) 2017, Alexander Schwarz
 * Contact: webmaster@dragongamer.net
 * License: BSD 3-clause License
@@ -12,7 +12,6 @@
 #include <mutex>
 #include <thread>
 #include <chrono>
-#include <condition_variable>
 #include <iterator>
 #include <list>
 #include "znc/main.h"
@@ -108,7 +107,13 @@ private:
 class CAlarm : public CModule
 {
 public:
-    MODCONSTRUCTOR( CAlarm )
+    MODCONSTRUCTOR( CAlarm ) { }
+    virtual ~CAlarm ( ) override
+    {
+        check_loop_ = false;
+        if (t1_.joinable()) t1_.join ( );
+    }
+    virtual bool OnLoad ( const CString &sArgs, CString &sMessage ) override
     {
         AddHelpCommand ( );
         AddCommand ( "add", static_cast<CModCommand::ModCmdFunc>(&CAlarm::add_timer), "reason",
@@ -120,14 +125,6 @@ public:
         t1_ = thread ( [ this ] ( ) {
             loopFunc ( );
         } );
-    }
-    virtual ~CAlarm ( ) override
-    {
-        check_loop_ = false;
-        t1_.join ( );
-    }
-    virtual bool OnLoad ( const CString &sArgs, CString &sMessage ) override
-    {
         return true;
     }
     void add_timer ( const CString &sLine )
@@ -176,8 +173,8 @@ public:
     void loopFunc ()
     {
         while ( check_loop_ ) {
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-            std::unique_lock<std::mutex> lock(mutex_);
+            this_thread::sleep_for(chrono::seconds(1));
+            unique_lock<mutex> lock(mutex_);
             if ( !timer_list_.empty() ) {
                 if ( timer_list_.front().timer_ran_out (  ) ) {
                     PutModule ( "Timer expired: " + timer_list_.front().get_timer ( ) );
