@@ -58,7 +58,7 @@ auto string_from_secs ( const long long end_time ) -> string {
     }
     auto temp = string{to_string(hours) + ":" + minutes_string + ":" + seconds_string};
     return temp;
-}
+ }
 } // end of namespace parser
 
 class Timer
@@ -123,7 +123,7 @@ public:
         AddCommand ( "list", static_cast<CModCommand::ModCmdFunc>(&CAlarm::list_timers), " ",
                      "List all timers" );
         t1_ = thread ( [ this ] ( ) {
-            loopFunc ( );
+            loop_func ( );
         } );
         return true;
     }
@@ -170,7 +170,7 @@ public:
             PutModule ( "Expires in: " + t.get_remaining_time ( ) );
         }
     }
-    void loopFunc ()
+    void loop_func ()
     {
         while ( check_loop_ ) {
             this_thread::sleep_for(chrono::seconds(1));
